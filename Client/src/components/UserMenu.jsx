@@ -17,7 +17,7 @@ export default function UserMenu() {
   if (!user) {
     return (
       <a
-        href="http://localhost:5000/api/auth/google"
+        href="https://pulse-newsapp.onrender.com/api/auth/google"
         className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-[12px] font-medium transition-all"
         style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "#fff" }}
       >
