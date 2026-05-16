@@ -18,10 +18,15 @@ app.use(cors({
   credentials: true,
 }))
 app.use(express.json())
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    secure: true,       // HTTPS only (Render uses HTTPS)
+    sameSite: "none",   // required for cross-origin (Vercel ↔ Render)
+  }
 }))
 app.use(passport.initialize())
 
