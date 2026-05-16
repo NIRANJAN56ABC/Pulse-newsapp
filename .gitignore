@@ -1,6 +1,8 @@
 # dependencies
 node_modules/
 
+.vscode/
+
 # environment variables
 .env
 server/.env
