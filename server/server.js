@@ -14,10 +14,17 @@ const { startAutoRefresh } = require("./services/rssService")
 const app = express()
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://pulse-newsapp.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true)
+    // Allow localhost for development
+    if (origin.startsWith("http://localhost")) return callback(null, true)
+    // Allow any vercel.app subdomain
+    if (origin.endsWith(".vercel.app")) return callback(null, true)
+    // Allow the main production domain
+    if (origin === "https://pulse-newsapp.vercel.app") return callback(null, true)
+    return callback(new Error("Not allowed by CORS"))
+  },
   credentials: true,
 }))
 app.use(express.json())
