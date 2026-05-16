@@ -22,7 +22,7 @@ function NewsApp({ theme, onToggleTheme }) {
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState("")
   const [query, setQuery]       = useState("")
-
+//useeffect
   useEffect(() => {
   const fetchNews = async () => {
     try {
