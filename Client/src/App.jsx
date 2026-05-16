@@ -29,7 +29,7 @@ function NewsApp({ theme, onToggleTheme }) {
       setLoading(true)
       setError("")
 
-      const API = import.meta.env.VITE_API_URL || "https://pulse-newsapp.onrender.com/api"
+      const API = "https://pulse-newsapp.onrender.com/api"
 
       const { data } = await axios.get(`${API}/news`)
 

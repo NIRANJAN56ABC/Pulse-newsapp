@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 import axios from "axios"
 
-const API = import.meta.env.VITE_API_URL || "https://pulse-newsapp.onrender.com/api"
+const API = "https://pulse-newsapp.onrender.com/api"
 
 const AuthContext = createContext(null)
 
