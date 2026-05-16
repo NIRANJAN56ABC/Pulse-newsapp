@@ -31,8 +31,7 @@ function NewsApp({ theme, onToggleTheme }) {
 
       const API = import.meta.env.VITE_API_URL || "https://pulse-newsapp.onrender.com/api"
 
-      const { data } = await axios.get(`${API}/api/news`)
-      console.log("ENV:", import.meta.env.VITE_API_URL)
+      const { data } = await axios.get(`${API}/news`)
 
       setArticles(data || [])
     } catch (err) {
