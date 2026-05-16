@@ -1,82 +1,40 @@
 const express = require("express")
+const { fetchTopNews } = require("../services/rssService")
 const News = require("../models/news")
-const fetchTopNews = require("../services/rssService")
-const { summarizeArticle } = require("../services/aiService")
 
 const router = express.Router()
 
 router.get("/", async (req, res) => {
-
   try {
-
     const articles = await fetchTopNews()
-
-    for (let item of articles) {
-
-      await News.updateOne(
-        { link: item.link },
-        {
-          title: item.title,
-          content: item.contentSnippet,
-          link: item.link,
-          pubDate: item.pubDate
-        },
-        { upsert: true }
-      )
-
-    }
-
-    const news = await News.find()
-      .sort({ pubDate: -1 })
-      .limit(20)
-
-    res.json(news)
-
+    res.json(articles)
   } catch (error) {
-
+    console.error("[newsRoutes] Error:", error.message)
     res.status(500).json({ message: "Error fetching news" })
-
   }
-
 })
 
-router.post("/summarize", async (req, res) => {
-
+// POST /api/news/by-links
+// Body: { links: ["https://...", ...] }
+// Returns the matching News documents in the same order as the input links.
+router.post("/by-links", async (req, res) => {
   try {
-
-    const { text } = req.body
-
-    if (!text || !text.trim()) {
-      return res.status(400).json({ message: "Text is required to summarize." })
+    const { links } = req.body
+    if (!Array.isArray(links) || links.length === 0) {
+      return res.json([])
     }
 
-    const summary = await summarizeArticle(text)
+    const articles = await News.find({ link: { $in: links } }).lean()
 
-    res.json({ summary })
+    // Preserve the original order (most-recently-read first)
+    const byLink = Object.fromEntries(articles.map((a) => [a.link, a]))
+    const ordered = links.map((l) => byLink[l]).filter(Boolean)
 
-  } 
-//   catch (error) {
-
-//     console.error("Error summarizing article:", error.message)
-//     res.status(500).json({
-//       message: "Error summarizing article with AI.",
-//     })
-
-//   }
-catch (error) {
-    console.error("Error summarizing article:", error)
-  
-    if (error?.status === 429 || error?.error?.code === 429) {
-      return res.status(429).json({
-        error: "AI quota reached. Please try again later."
-      })
-    }
-  
-    res.status(500).json({
-      error: "Failed to summarize article"
-    })
+    res.json(ordered)
+  } catch (error) {
+    console.error("[newsRoutes] by-links error:", error.message)
+    res.status(500).json({ message: "Error fetching articles by links" })
   }
-
 })
 
 module.exports = router

@@ -2,8 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#root {
-  height: 100%;
+/* ── Theme variables ────────────────────────────────────────────────────────── */
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 }
+
+[data-theme="dark"] {
+  --bg-base: #080c14;
+  --bg-surface: #0d1117;
+  --bg-surface-hover: #111820;
+  --bg-elevated: #0f1318;
+
+  /* Solid values — no more washed-out opacity */
+  --text-primary:    #f1f5f9;   /* near-white, crisp */
+  --text-secondary:  #cbd5e1;   /* slate-300 — clearly readable */
+  --text-tertiary:   #64748b;   /* slate-500 — supporting info */
+  --text-quaternary: #334155;   /* slate-700 — timestamps, meta */
+
+  --border-subtle:  #1e293b;    /* slate-800 */
+  --border-default: #293548;
+  --border-hover:   #3d4f6b;
+
+  --accent-bg:      #111827;
+  --accent-bg-hover:#1a2436;
+
+  --scrollbar-thumb: #1e293b;
+  --scrollbar-thumb-hover: #334155;
+}
+
+[data-theme="light"] {
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f1f5f9;
+  --bg-elevated: #ffffff;
+
+  /* Solid values — strong contrast on white */
+  --text-primary:    #0f172a;   /* slate-900 — near-black */
+  --text-secondary:  #1e293b;   /* slate-800 — article titles */
+  --text-tertiary:   #475569;   /* slate-600 — snippets, labels */
+  --text-quaternary: #94a3b8;   /* slate-400 — timestamps, meta */
+
+  --border-subtle:  #e2e8f0;    /* slate-200 */
+  --border-default: #cbd5e1;    /* slate-300 */
+  --border-hover:   #94a3b8;    /* slate-400 */
+
+  --accent-bg:      #f1f5f9;
+  --accent-bg-hover:#e2e8f0;
+
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+
+html, body, #root {
+  height: 100%;
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+/* Modal animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Landing page animations ───────────────────────────────────────────────── */
+
+/* Fade up — used for hero elements on load */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in — used for elements that don't need vertical movement */
+@keyframes fade-in-soft {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Scroll-triggered: elements start invisible, JS adds .in-view to play */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays for child groups */
+.reveal-delay-1 { transition-delay: 0.05s; }
+.reveal-delay-2 { transition-delay: 0.12s; }
+.reveal-delay-3 { transition-delay: 0.19s; }
+.reveal-delay-4 { transition-delay: 0.26s; }
+.reveal-delay-5 { transition-delay: 0.33s; }
+.reveal-delay-6 { transition-delay: 0.40s; }
+
+/* Hero load animations — play immediately, staggered */
+.hero-badge {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+.hero-title {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+.hero-sub {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+.hero-cta {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+.hero-stats {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+
+/* ── Mobile: hide scrollbar on pill rows ──────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
