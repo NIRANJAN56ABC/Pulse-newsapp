@@ -24,19 +24,26 @@ function NewsApp({ theme, onToggleTheme }) {
   const [query, setQuery]       = useState("")
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setLoading(true); setError("")
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "https://pulse-newsapp.onrender.com/api"}/news`)
-        setArticles(data || [])
-      } catch {
-        setError("Unable to load news. Please try again later.")
-      } finally {
-        setLoading(false)
-      }
+  const fetchNews = async () => {
+    try {
+      setLoading(true)
+      setError("")
+
+      const API = import.meta.env.VITE_API_URL
+
+      const { data } = await axios.get(`${API}/api/news`)
+
+      setArticles(data || [])
+    } catch (err) {
+      console.error(err)
+      setError("Unable to load news. Please try again later.")
+    } finally {
+      setLoading(false)
     }
-    fetchNews()
-  }, [])
+  }
+
+  fetchNews()
+}, [])
 
   
   const bookmarks = user ? (user.bookmarks ?? []) : localBookmarks
