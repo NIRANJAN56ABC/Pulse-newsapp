@@ -27,10 +27,10 @@ function NewsApp({ theme, onToggleTheme }) {
     const fetchNews = async () => {
       try {
         setLoading(true); setError("")
-        const { data } = await axios.get(`${import.meta.env.VITE_API_URL ?? "http://localhost:5000/api"}/news`)
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "https://pulse-newsapp.onrender.com/api"}/news`)
         setArticles(data || [])
       } catch {
-        setError("Unable to load news. Please ensure the server is running on port 5000.")
+        setError("Unable to load news. Please try again later.")
       } finally {
         setLoading(false)
       }
