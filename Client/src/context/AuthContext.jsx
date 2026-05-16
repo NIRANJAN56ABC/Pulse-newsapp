@@ -1,13 +1,13 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 import axios from "axios"
 
-const API = "http://localhost:5000/api"
+const API = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api"
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null)
-  const [loading, setLoading] = useState(true) // true while checking stored token
+  const [loading, setLoading] = useState(true)
 
   // ── Bootstrap: check stored token ──────────────────────────────────────────
   useEffect(() => {
